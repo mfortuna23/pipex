@@ -6,7 +6,7 @@
 #    By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/21 11:57:58 by mfortuna          #+#    #+#              #
-#    Updated: 2024/04/17 13:50:56 by mfortuna         ###   ########.fr        #
+#    Updated: 2024/04/22 15:32:37 by mfortuna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ all: $(NAME)
 $(NAME): $(NAMELIB) $(PIPEX_OBJ)
 	cp $(NAMELIB) $(NAME)
 	$(AR) $(NAME) $(PIPEX_OBJ) 
-	$(CC) $(CFLAGS) -o pipex $(MAN_MAIN) $(NAME)
+	$(CC) -g $(CFLAGS) -o pipex $(MAN_MAIN) $(NAME)
 
 $(NAMELIB) : $(MYLIBFT_PATH)
 	$(MAKE) $(MYLIBFT_PATH)
