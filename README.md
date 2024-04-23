@@ -46,9 +46,17 @@ allowed functions
 		execve() executes the program referred to by pathname. This causes the program that is currently being run by the calling process  to  be  replaced  with  a  new  program,  with newly initialized stack, heap, and (initialized and uninitialized) data segments.
 		argv  is  an  array of pointers to strings passed to the new program as its command-line arguments.  By convention, the first of these  strings (i.e.,  argv[0])  should  contain the filename associated with the file being executed. The argv array must be terminated by a  NULL  pointer. (Thus, in the new program, argv[argc] will be NULL.)
 
-exit
-fork
-pipe
-unlink
-wait
-waitpid
+# exit <!--this funtion  terminates the program and frees dinamic allocated memory only (need to close any file) it doesnt return anything but it shows if it was an error or it was exopected depending on the argument given-->
+	void exit(int status)
+		The C library function void exit(int status) terminates the calling process immediately. Any open file descriptors belonging to the process are closed and any children of the process are inherited by process 1, init, and the process parent is sent a SIGCHLD signal.
+# fork <!--this function creates a "copy" of the function called child. you can make the parrent do something while child does a diferent thing-->
+	#include <sys/types.h>
+	int fork(void)
+		The Fork system call is used for creating a new process in Linux, and Unix systems, which is called the child process, which runs concurrently with the process that makes the fork() call (parent process). After a new child process is created, both processes will execute the next instruction following the fork() system call.
+		The child process uses the same pc(program counter), same CPU registers, and same open files which use in the parent process. It takes no parameters and returns an integer value.
+		if the return value is 0 the function child runs, if it is negative it didnt create child if it is positive the function parrent is running
+# pipe <!--this function allow parent and child process to comunicate, the parent writes in th fd given and the child reads the massage-->
+# unlink <!--this function deletes a file if you have permissions to do so and if all of the fds associeted with that file are closed. the file's directory entry will be removed, but the file's data blocks on the disk will remain allocated. The file will only be effectively deleted from the file system once all open file descriptors associated with it are closed and there are no more references to it. -->
+# wait <!--this function will make the parrent process to wait for the child process to terminate for it to continue to work-->
+	#include <sys/wait.h>
+# waitpit
