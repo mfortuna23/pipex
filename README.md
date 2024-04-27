@@ -60,3 +60,39 @@ allowed functions
 # wait <!--this function will make the parrent process to wait for the child process to terminate for it to continue to work-->
 	#include <sys/wait.h>
 # waitpit
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#define MAX_PATH_LEN 1024
+
+char* find_executable_path(const char* command) {
+    // Define a list of directories to search
+    const char* search_dirs[] = {"/bin", "/usr/bin", "/usr/local/bin", NULL};
+
+    for (int i = 0; search_dirs[i] != NULL; ++i) {
+        char full_path[MAX_PATH_LEN];
+        snprintf(full_path, MAX_PATH_LEN, "%s/%s", search_dirs[i], command);
+        if (access(full_path, X_OK) == 0) {
+            return strdup(full_path);
+        }
+    }
+
+    return NULL; // Executable not found
+}
+
+int main() {
+    const char* command = "ls"; // Example command
+    char* executable_path = find_executable_path(command);
+    if (executable_path != NULL) {
+        printf("Executable path: %s\n", executable_path);
+        free(executable_path);
+    } else {
+        printf("Executable '%s' not found\n", command);
+    }
+
+    return 0;
+}
