@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfortuna <mfortuna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 15:07:58 by mfortuna          #+#    #+#             */
-/*   Updated: 2023/11/06 15:37:31 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:21:59 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static size_t	ft_countmywords(const char	*s, char c)
 	return (count);
 }
 
-static char	**ft_freearr(char	**arr, size_t word)
+char	**ft_freearr(char	**arr, size_t word)
 {
 	size_t	i;
 
