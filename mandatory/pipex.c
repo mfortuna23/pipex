@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:01 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/04/24 14:39:28 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/04/29 11:45:23 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,33 @@ static int	permissions(char *s, int amode)
 		return (1);
 	}
 }
+
+static char	*find_path(char *cmd)
+{
+	char	**paths;
+	char	*full_path;
+	int		i;
+
+	i = 1;
+	full_path = NULL;
+	paths[0] = "/bin/";
+	paths[1] = "/usr/bin/";
+	paths[2] = "/usr/local/bin/";
+	full_path = ft_strjoin(paths[0], cmd);
+	while (access(full_path, X_OK) != 0)
+	{
+		if (i == 3)
+		{
+			ft_printf("command %s not found", cmd);
+			free(full_path);
+			return (NULL);
+		}
+		full_path = ft_strjoin(paths[i], cmd);
+		i++;
+	}
+	return (full_path);
+}
+
 static int	parent_proc(char **argv, int fd);
 
 static int	child_proc(char **argv, int fd);
