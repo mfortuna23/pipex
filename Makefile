@@ -6,7 +6,7 @@
 #    By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/21 11:57:58 by mfortuna          #+#    #+#              #
-#    Updated: 2024/04/29 11:45:32 by mfortuna         ###   ########.fr        #
+#    Updated: 2024/05/02 15:14:25 by mfortuna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ MYLIBFT_PATH	= mandatory/mylibft/
 NAMELIB			= mandatory/mylibft/mylibft.a
 MANDATORY		= mandatory/
 MAN_MAIN		= $(MANDATORY)pipex.c
-PIPEX_OBJ		= $(addprefix $(MANDATORY), )
+PIPEX_OBJ		= $(addprefix $(MANDATORY), pipex_utils.o)
 AR				= ar rc
 MAKE			= make -C
 

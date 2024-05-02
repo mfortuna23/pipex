@@ -6,13 +6,13 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 15:07:58 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/04/29 14:21:59 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:45:58 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	ft_countmywords(const char	*s, char c)
+size_t	ft_countmywords(const char	*s, char c)
 {
 	size_t	count;
 	size_t	i;

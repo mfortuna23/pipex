@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:01 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/04/30 14:51:04 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:46:51 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,36 +57,56 @@ static char	*find_path(char *cmd)
 	ft_freearr(paths, 3);
 	return (full_path);
 }
-static int forking(int argc, char **argv, char **env, int fd)
-{
-	
-}
 
-static int child_process(char **cmd, int fd_read, int fd_write, int id)
+static void child_process(char **cmd, int fd_read, int fd_write)
 {
 	char	*cmd_path;
-	int		char_read;
-	char	buffer[1024];
+	int		i;
 
-	char_read = 1;
+	i = 0;
 	cmd_path = NULL;
+	dup2(fd_read, STDOUT_FILENO);
+	dup2(fd_write, STDIN_FILENO);
+	close(fd_read);
+	close(fd_write);
 	if (cmd[0] == 0)
-	{
-		while (char_read != 0)
-		{
-			ft_putstr_fd(buffer, fd_write);
-			char_read = read(fd_read, buffer, 1024);
-		}
-		close(fd_read);
-		close(fd_write);
-		exit(0);
-	}
+		cmd[0] = "cat";
 	cmd_path = find_path(cmd[0]);
 	if (cmd_path == NULL)
 		exit(1);
-	waitpid(0, NULL, 0);
-	if (execve(cmd_path, cmd, NULL) == -1)
-		return (ft_printf("execve didn't work in process: %i O__O\n", id));
+	execve(cmd_path, cmd, NULL);
+	while(cmd_path[i] != 0)
+	{
+		free(cmd_path[i]);
+		i++;
+	}
+	free(cmd_path);
+	exit(ft_printf("execve didn't work O__O\n"));
+}
+
+static int forking(int argc, char **argv, char **env, int fd_src)
+{
+	int		**fd;
+	int		i;
+	int		*pid;
+	char	**cmd;
+
+	i = 0;
+	cmd = NULL;
+	fd = ft_pipe_fds(argc - 2);
+	pid = ft_calloc(argc - 2, sizeof(int));
+	while (i < (argc - 2))
+	{
+		pid[i] = fork();
+		if (pid[i] == -1)
+			ft_clean_proc((argc - 3), fd, pid);
+		cmd = ft_split(argv[i + 2], " ");
+		if (pid[i] == 0)
+			child_process(cmd, fd[i][0], fd[i + 1][1]);
+		ft_freearr(cmd, argv[i + 2]);
+		waitpid(pid[i], NULL, 0);
+		i++;
+	}
 }
 
 int	main(int argc, char **argv, char **env)
