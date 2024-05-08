@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:25:11 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/05/02 15:32:53 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/08 19:02:32 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	ft_clean(int n_fd, int **fd)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	ft_close_files(fd);
+	ft_close_files(fd, n_fd);
 	while (i < n_fd)
 	{
 		free(fd[i]);
@@ -29,7 +29,7 @@ void	ft_clean(int n_fd, int **fd)
 int	**ft_pipe_fds(int n_fd)
 {
 	int	i;
-	int **fd;
+	int	**fd;
 
 	i = 0;
 	fd = ft_calloc(n_fd + 1, sizeof(int *));
@@ -55,11 +55,12 @@ int	**ft_pipe_fds(int n_fd)
 	return (fd);
 }
 
-void	ft_close_files(int **fd)
+void	ft_close_files(int **fd, int n_fds)
 {
 	int	i;
-	
-	while (fd[i] != NULL)
+
+	i = 0;
+	while (i <= n_fds)
 	{
 		close(fd[i][0]);
 		close(fd[i][1]);

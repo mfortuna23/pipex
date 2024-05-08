@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:01 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/05/02 15:46:51 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/08 18:58:39 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,10 @@ static char	*find_path(char *cmd)
 	return (full_path);
 }
 
-static void child_process(char **cmd, int fd_read, int fd_write)
+static void	child_process(char **cmd, int fd_read, int fd_write, char **env)
 {
 	char	*cmd_path;
-	int		i;
 
-	i = 0;
 	cmd_path = NULL;
 	dup2(fd_read, STDOUT_FILENO);
 	dup2(fd_write, STDIN_FILENO);
@@ -74,17 +72,13 @@ static void child_process(char **cmd, int fd_read, int fd_write)
 	cmd_path = find_path(cmd[0]);
 	if (cmd_path == NULL)
 		exit(1);
-	execve(cmd_path, cmd, NULL);
-	while(cmd_path[i] != 0)
-	{
-		free(cmd_path[i]);
-		i++;
-	}
+	// ft_printf("%s\n", cmd_path);
+	execve(cmd_path, cmd, env);
 	free(cmd_path);
 	exit(ft_printf("execve didn't work O__O\n"));
 }
 
-static int forking(int argc, char **argv, char **env, int fd_src)
+static void	forking(int argc, char **argv, char **env)
 {
 	int		**fd;
 	int		i;
@@ -100,22 +94,21 @@ static int forking(int argc, char **argv, char **env, int fd_src)
 		pid[i] = fork();
 		if (pid[i] == -1)
 			ft_clean_proc((argc - 3), fd, pid);
-		cmd = ft_split(argv[i + 2], " ");
+		cmd = ft_split(argv[i + 2], ' ');
 		if (pid[i] == 0)
-			child_process(cmd, fd[i][0], fd[i + 1][1]);
-		ft_freearr(cmd, argv[i + 2]);
+			child_process(cmd, fd[i][0], fd[i + 1][1], env);
+		ft_freearr(cmd, ft_countmywords(argv[i + 2], ' '));
 		waitpid(pid[i], NULL, 0);
 		i++;
 	}
+	ft_clean_proc(i, fd, pid);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	int	fd_src;
 	int	fd_dst;
-	int	check;
 
-	check = 1;
 	if (argc == 5)
 	{
 		fd_src = file_open(argv[1], 0);
@@ -124,7 +117,7 @@ int	main(int argc, char **argv, char **env)
 		dup2(fd_dst, STDIN_FILENO);
 		close(fd_src);
 		close(fd_dst);
-		forking(argc, argv, env, STDOUT_FILENO);
+		forking(argc, argv, env);
 	}
 	ft_printf("4 arguments please :)\n");
 	return (1);
