@@ -3,36 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:01 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/05/08 18:58:39 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:14:38 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	file_open(char *file, int x)
+void	errors(char *s)
 {
-	if (x == 0)
-	{
-		if (access(file, X_OK) != 0)
-		{
-			perror(file);
-			exit(1);
-		}
-		if (access(file, R_OK) != 0)
-		{
-			perror(file);
-			exit(1);
-		}
-		return (open(file, O_WRONLY));
-	}
-	return (open(file, O_CREAT | O_WRONLY | O_TRUNC, \
-		S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH));
+	ft_putstr_fd(s, STDERR_FILENO);
+	exit(3);
 }
 
-static char	*find_path(char *cmd)
+int	file_opener(char *file, int write)
+{
+	if (write == 0)
+	{
+		if (access(file, X_OK) < 0)
+			errors("1st file doesn't exist\n");
+		if (access(file, R_OK) < 0)
+			errors("Can't read 1st file\n");
+		return (open(file, O_RDONLY));
+	}
+	return (open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644));
+}
+
+char	*find_path(char *cmd)
 {
 	char	**paths;
 	char	*full_path;
@@ -46,11 +45,14 @@ static char	*find_path(char *cmd)
 	{
 		if (i == 3)
 		{
-			ft_printf("command \"%s\" not found", cmd);
+			ft_putstr_fd("command \"", STDERR_FILENO);
+			ft_putstr_fd(cmd, STDERR_FILENO);
+			ft_putstr_fd("\" not found", STDERR_FILENO);
 			free(full_path);
 			ft_freearr(paths, 3);
 			return (NULL);
 		}
+		free(full_path);
 		full_path = ft_strjoin(paths[i], cmd);
 		i++;
 	}
@@ -58,68 +60,80 @@ static char	*find_path(char *cmd)
 	return (full_path);
 }
 
-static void	child_process(char **cmd, int fd_read, int fd_write, char **env)
+int	ft_cp(char *cmd, char **env, int fd_in, int fd_out)
 {
-	char	*cmd_path;
+	char	**full_cmd;
+	char	*path;
 
-	cmd_path = NULL;
-	dup2(fd_read, STDOUT_FILENO);
-	dup2(fd_write, STDIN_FILENO);
-	close(fd_read);
-	close(fd_write);
-	if (cmd[0] == 0)
-		cmd[0] = "cat";
-	cmd_path = find_path(cmd[0]);
-	if (cmd_path == NULL)
-		exit(1);
-	// ft_printf("%s\n", cmd_path);
-	execve(cmd_path, cmd, env);
-	free(cmd_path);
-	exit(ft_printf("execve didn't work O__O\n"));
+	full_cmd = ft_split(cmd, ' ');
+	path = find_path(full_cmd[0]);
+	if (path == NULL)
+	{
+		close(fd_in);
+		close(fd_out);
+		ft_freearr(full_cmd, ft_countmywords(cmd, ' '));
+		return (42);
+	}
+	if (dup2(fd_in, STDIN_FILENO) < 0)
+		errors("dup2 didnt work\n");
+	if (dup2(fd_out, STDOUT_FILENO) < 0)
+		errors("dup2 didnt work\n");
+	close(fd_in);
+	close(fd_out);
+	execve(path, full_cmd, env);
+	free(path);
+	path = NULL;
+	ft_freearr(full_cmd, ft_countmywords(cmd, ' '));
+	ft_putstr_fd("execve didn't work\n", STDERR_FILENO);
+	return (42);
 }
 
-static void	forking(int argc, char **argv, char **env)
+void	ft_pipe(char **argv, char **env, int fd_in, int fd_out)
 {
-	int		**fd;
-	int		i;
-	int		*pid;
-	char	**cmd;
+	int		fd[2];
+	pid_t	pid1;
+	pid_t	pid2;
 
-	i = 0;
-	cmd = NULL;
-	fd = ft_pipe_fds(argc - 2);
-	pid = ft_calloc(argc - 2, sizeof(int));
-	while (i < (argc - 2))
+	if (pipe(fd) < 0)
+		errors("couldnt pipe fd\n");
+	pid1 = fork();
+	if (pid1 < 0)
+		errors("couldn't fork the process\n");
+	if (pid1 == 0)
 	{
-		pid[i] = fork();
-		if (pid[i] == -1)
-			ft_clean_proc((argc - 3), fd, pid);
-		cmd = ft_split(argv[i + 2], ' ');
-		if (pid[i] == 0)
-			child_process(cmd, fd[i][0], fd[i + 1][1], env);
-		ft_freearr(cmd, ft_countmywords(argv[i + 2], ' '));
-		waitpid(pid[i], NULL, 0);
-		i++;
+		close(fd[0]);
+		if(ft_cp(argv[2], env, fd_in, fd[1]) == 42)
+			exit(42);
 	}
-	ft_clean_proc(i, fd, pid);
+	pid2 = fork();
+	if (pid2 < 0)
+		errors("couldn't fork the process\n");
+	if (pid2 == 0)
+	{
+		close(fd[1]);
+		if(ft_cp(argv[3], env, fd[0], fd_out) == 42)
+			exit(42);
+	}
+	waitpid(pid1, NULL, 0);
+	close(fd[1]);
+	waitpid(pid2, NULL, 0);
+	close(fd[0]);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	int	fd_src;
-	int	fd_dst;
+	int	fd_in;
+	int	fd_out;
 
 	if (argc == 5)
 	{
-		fd_src = file_open(argv[1], 0);
-		fd_dst = file_open(argv[argc - 1], 26);
-		dup2(fd_src, STDOUT_FILENO);
-		dup2(fd_dst, STDIN_FILENO);
-		close(fd_src);
-		close(fd_dst);
-		forking(argc, argv, env);
+		fd_in = file_opener(argv[1], 0);
+		fd_out = file_opener(argv[argc - 1], 1);
+		ft_pipe(argv, env, fd_in, fd_out);
+		close(fd_in);
+		close(fd_out);
 	}
-	ft_printf("4 arguments please :)\n");
-	return (1);
+	else
+		ft_printf("try: <file1> <cmd1> <cmd2> <file2>\n");
+	return (0);
 }
-

@@ -16,6 +16,7 @@
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
+					"autoAttachChildProcesses": true,
                     "ignoreFailures": true
                 }
             ],
