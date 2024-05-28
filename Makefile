@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+         #
+#    By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/21 11:57:58 by mfortuna          #+#    #+#              #
-#    Updated: 2024/05/02 15:14:25 by mfortuna         ###   ########.fr        #
+#    Updated: 2024/05/28 14:23:56 by mfortuna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ MYLIBFT_PATH	= mandatory/mylibft/
 NAMELIB			= mandatory/mylibft/mylibft.a
 MANDATORY		= mandatory/
 MAN_MAIN		= $(MANDATORY)pipex.c
-PIPEX_OBJ		= $(addprefix $(MANDATORY), pipex_utils.o)
+PIPEX_OBJ		= $(addprefix $(MANDATORY), pipex.o)
 AR				= ar rc
 MAKE			= make -C
 
