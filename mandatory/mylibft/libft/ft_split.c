@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 15:07:58 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/05/02 15:45:58 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:04:01 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,14 @@ size_t	ft_countmywords(const char	*s, char c)
 	return (count);
 }
 
-char	**ft_freearr(char	**arr, size_t word)
+char	**ft_freearr(char	**arr)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < word)
+	if (arr == 0)
+		return (0);
+	while (arr[i])
 	{
 		free(arr[i]);
 		i++;
@@ -66,7 +68,7 @@ static char	**toomanylines(char **arr, char *s, char c, size_t word)
 		{
 			arr[x] = ft_substr(s, j, (i - j) * sizeof(char));
 			if (!arr[x])
-				return (ft_freearr(arr, word));
+				return (ft_freearr(arr));
 			i ++;
 			x ++;
 		}

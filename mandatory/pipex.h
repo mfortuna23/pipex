@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:24 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/05/28 14:45:19 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:28:17 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,6 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <string.h>
 
 #endif
