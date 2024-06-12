@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_b.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 13:52:24 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/06 11:50:23 by mfortuna         ###   ########.fr       */
+/*   Created: 2024/06/06 14:07:10 by mfortuna          #+#    #+#             */
+/*   Updated: 2024/06/06 14:09:35 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
-# include "./mylibft/mylibft.h"
-# include <sys/types.h>
-# include <fcntl.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
-# include <string.h>
+# include "../mandatory/pipex.h"
 
-void	errors(char *s);
-void	ft_wait(pid_t pid, int fd);
-char	*find_path(char *cmd, char **env);
-void	ft_cp(char *cmd, char **env, int fd_in, int fd_out);
+
 #endif

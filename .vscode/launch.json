@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/${fileBasenameNoExtension}",
-            "args": ["file1", "grep a", "wc -l", "file2"],
+            "args": ["file6", "cat", "head -1", "file2"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
