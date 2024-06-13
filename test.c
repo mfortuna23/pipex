@@ -68,31 +68,25 @@ char **ft_newsplit(char *s)
 	return (arr);
 }
 
-static char	**toomanylines(char **arr, char *s, char c, size_t word)
-{
-	size_t	i;
-	size_t	j;
-	size_t	x;
 
-	x = 0;
+char **newsplit(char *s, int words)
+{
+	char	**arr;
+	int		i;
+	int		j;
+	int		x;
+
+	arr = NULL;
 	i = 0;
-	while (word - 1 > x && s[i] != 0)
+	x = 0;
+	arr = calloc(words + 1, sizeof(char *));
+	while((s[i]) && x > words)
 	{
-		while (s[i] == c)
-			i ++;
+		while (s[i] == ' ')
+			i++;
 		j = i;
-		while (s[i] != c && s[i] != 0)
-			i ++;
-		if ((s[i] == c || s[i] == 0) && word - 1 > x)
-		{
-			arr[x] = ft_substr(s, j, (i - j) * sizeof(char));
-			if (!arr[x])
-				return (ft_freearr(arr));
-			i ++;
-			x ++;
-		}
+		while ()
 	}
-	return (arr);
 }
 
 int main (int argc, char **argv)

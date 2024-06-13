@@ -6,58 +6,11 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:52:01 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/12 12:18:47 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/06/13 10:58:08 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	coutarr(char *s)
-{
-	int i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (s[i] == 32)
-	{
-		if (s[i] == 34 || s[i] == 39)
-		{
-			i++;
-			while (s[i] != 34 || s[i] != 39)
-				i++;
-		}
-		while (s[i] != 32)
-			i++;
-			count ++;
-	}
-}
-
-char **ft_newsplit (char *s)
-{
-	char	**arr;
-	int		i;
-	int		j;
-
-	arr = NULL;
-	i = 0;
-	arr = ft_calloc(countarr(s), sizeof(char *));
-	if (!arr)
-		return(arr);
-	while (s[i] == ' ')
-		i++;
-	j = i;
-	while ((s[i]) && s[i] != ' ')
-		i++;
-	arr[0] = ft_substr(s, j, (i - j));
-	while (s[i] == 32 | s[i] == 34 | s[i] == 39)
-		i++;
-	j = i;
-	while (s[i] && (s[i] != 34 && s[i] != 39))
-		i++;
-	arr[1] = ft_substr(s, j, (i - j));
-	return (arr);
-}
 
 static void	ft_pipe(char **argv, char **env, int fd_in, int fd_out)
 {

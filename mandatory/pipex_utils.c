@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:25:11 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/12 12:08:00 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/06/13 11:43:12 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,45 @@ char	*find_path(char *cmd, char **env)
 	ft_freearr(paths);
 	return (0);
 }
+char	**ft_fullcmd(char *cmd)
+{
+	char	**arr;
+	int		i;
+	int		j;
+	char	*s;
+	
+	arr = NULL;
+	i = 0;
+	s = cmd;
+	if (ft_strrchr(cmd, '\'') == NULL && ft_strrchr(cmd, '\"') == NULL)
+		return(ft_split(cmd, ' '));
+	arr = ft_calloc(3, sizeof(char *));
+	if(!arr)
+		return(arr);
+	while(cmd[i] == ' ')
+		i++;
+	while(cmd[i] != ' ')
+		i++;
+	arr[0] = ft_substr(cmd, 0, i);
+	while (cmd[i] != '\'' && cmd[i] != '\"')
+		i++;
+	while (cmd[i] == '\'' || cmd[i] == '\"')
+		i++;
+	j = i;
+	while (cmd[i] != '\'' && cmd[i] != '\"')
+		i++;
+	while (cmd[i] == '\'' && cmd[i] == '\"')
+		i++;
+	arr[1] = ft_substr(cmd, j, (i - j));	
+	return (arr);
+}
 
 void	ft_cp(char *cmd, char **env, int fd_in, int fd_out)
 {
 	char	**full_cmd;
 	char	*path;
 
-	full_cmd = ft_split(cmd, ' ');
+	full_cmd = ft_fullcmd(cmd);
 	path = find_path(full_cmd[0], env);
 	if (path == NULL)
 	{
