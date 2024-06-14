@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:25:11 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/13 11:43:12 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:45:18 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,29 +68,25 @@ char	**ft_fullcmd(char *cmd)
 	char	**arr;
 	int		i;
 	int		j;
-	char	*s;
 	
 	arr = NULL;
 	i = 0;
-	s = cmd;
 	if (ft_strrchr(cmd, '\'') == NULL && ft_strrchr(cmd, '\"') == NULL)
 		return(ft_split(cmd, ' '));
 	arr = ft_calloc(3, sizeof(char *));
-	if(!arr)
+	if (!arr)
 		return(arr);
-	while(cmd[i] == ' ')
+	while (cmd[i] == ' ')
 		i++;
-	while(cmd[i] != ' ')
+	while (cmd[i] != ' ')
 		i++;
 	arr[0] = ft_substr(cmd, 0, i);
-	while (cmd[i] != '\'' && cmd[i] != '\"')
+	while (cmd[i] != 34 && cmd[i] != 39)
 		i++;
-	while (cmd[i] == '\'' || cmd[i] == '\"')
+	while (cmd[i] == 34 || cmd[i] == 39)
 		i++;
 	j = i;
-	while (cmd[i] != '\'' && cmd[i] != '\"')
-		i++;
-	while (cmd[i] == '\'' && cmd[i] == '\"')
+	while (cmd[i] != 34 && cmd[i] != 39)
 		i++;
 	arr[1] = ft_substr(cmd, j, (i - j));	
 	return (arr);
