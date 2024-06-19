@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfortuna <mfortuna@student.42.pt>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:25:11 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/19 13:17:29 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:26:16 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,18 @@ char	*find_path(char *cmd, char **env)
 	full_path = NULL;
 	return (0);
 }
+
 char	**ft_fullcmd(char *cmd)
 {
 	char	**arr;
 	int		i;
-	
+
 	arr = NULL;
 	if (ft_strrchr(cmd, '\'') == NULL && ft_strrchr(cmd, '\"') == NULL)
-		return(ft_split(cmd, ' '));
+		return (ft_split(cmd, ' '));
 	arr = ft_calloc(3, sizeof(char *));
 	if (!arr)
-		return(arr);
+		return (arr);
 	while (cmd[i] == ' ')
 		i++;
 	while (cmd[i] != ' ')
@@ -105,5 +106,3 @@ void	ft_cp(char *cmd, char **env, int fd_in, int fd_out)
 	ft_freearr(full_cmd);
 	errors("execve");
 }
-
-
