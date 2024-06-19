@@ -63,6 +63,7 @@ char	**ft_fullcmd(char *cmd)
 	int		i;
 
 	arr = NULL;
+	i = 0;
 	if (ft_strrchr(cmd, '\'') == NULL && ft_strrchr(cmd, '\"') == NULL)
 		return (ft_split(cmd, ' '));
 	arr = ft_calloc(3, sizeof(char *));
