@@ -6,7 +6,7 @@
 /*   By: mfortuna <mfortuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:25:11 by mfortuna          #+#    #+#             */
-/*   Updated: 2024/06/14 14:45:18 by mfortuna         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:17:29 by mfortuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,15 @@ void	errors(char *s)
 	exit(1);
 }
 
-void	ft_wait(pid_t pid, int fd)
+int	ft_wait(pid_t pid1, pid_t pid2, int fd1, int fd2)
 {
 	int	status;
-	int	i;
 
-	i = 0;
-	while (i < 10000)
-	{
-		waitpid(pid, &status, WNOHANG);
-		if (WIFEXITED(status) == 1)
-		{
-			close(fd);
-			return ;
-		}
-		else
-			i++;
-	}
-	close(fd);
+	waitpid(pid1, 0, WNOHANG);
+	close(fd2);
+	waitpid(pid2, &status, 0);
+	close(fd1);
+	return (WEXITSTATUS(status));
 }
 
 char	*find_path(char *cmd, char **env)
@@ -55,22 +46,22 @@ char	*find_path(char *cmd, char **env)
 		half_path = ft_strjoin(paths[i], "/" );
 		full_path = ft_strjoin(half_path, cmd);
 		free(half_path);
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, X_OK) == 0)
 			return (full_path);
 		free(full_path);
 		i++;
 	}
 	ft_freearr(paths);
+	paths = NULL;
+	full_path = NULL;
 	return (0);
 }
 char	**ft_fullcmd(char *cmd)
 {
 	char	**arr;
 	int		i;
-	int		j;
 	
 	arr = NULL;
-	i = 0;
 	if (ft_strrchr(cmd, '\'') == NULL && ft_strrchr(cmd, '\"') == NULL)
 		return(ft_split(cmd, ' '));
 	arr = ft_calloc(3, sizeof(char *));
@@ -81,14 +72,8 @@ char	**ft_fullcmd(char *cmd)
 	while (cmd[i] != ' ')
 		i++;
 	arr[0] = ft_substr(cmd, 0, i);
-	while (cmd[i] != 34 && cmd[i] != 39)
-		i++;
-	while (cmd[i] == 34 || cmd[i] == 39)
-		i++;
-	j = i;
-	while (cmd[i] != 34 && cmd[i] != 39)
-		i++;
-	arr[1] = ft_substr(cmd, j, (i - j));	
+	i += 2;
+	arr[1] = ft_substr(cmd, i, (ft_strlen(cmd + i)) - 1);
 	return (arr);
 }
 
@@ -103,8 +88,10 @@ void	ft_cp(char *cmd, char **env, int fd_in, int fd_out)
 	{
 		close(fd_in);
 		close(fd_out);
+		ft_putstr_fd(full_cmd[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		ft_freearr(full_cmd);
-		exit(1);
+		exit(127);
 	}
 	if (dup2(fd_in, STDIN_FILENO) < 0)
 		errors("dup2");
