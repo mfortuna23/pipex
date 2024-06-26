@@ -10,7 +10,7 @@
 This project is in rank2 of common-core.
 The objective of this project is to replicate the behavior of the pipe in bash.
 ```bash
-	./pipex "infile" "cmd1" "cmd2" "outfile"
+./pipex "infile" "cmd1" "cmd2" "outfile"
 ```
 this should work as the same as
 ```bash
@@ -25,10 +25,11 @@ this should work as the same as
 	git clone this rep in your computer
 	
 ```bash
-	git clone git@github.com:mfortuna23/pipex.git
-	cd pipex
-	make
+git clone git@github.com:mfortuna23/pipex.git
+cd pipex
+make
 ```
+![pipex in action](https://github.com/mfortuna23/pipex/assets/147384586/cbb46194-4a96-4ecb-81ab-20cbcfab8a8a)
 
 	
 </details>
